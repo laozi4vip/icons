@@ -2,7 +2,7 @@ name: Sync Fork from Upstream
 
 on:
   schedule:
-    - cron: '0 3 * * *'  # 每天凌晨 3 点自动运行（你可以改时间）
+    - cron: '0 3 * * *'  # 每天凌晨 3 点自动运行
   workflow_dispatch:     # 允许手动触发
 
 jobs:
@@ -15,17 +15,24 @@ jobs:
       - name: Configure Git
         run: |
           git config --global user.name 'laozi'
-       #   git config --global user.email 'your-email@example.com'
+          #git config --global user.email 'your-email@example.com'
 
-      - name: Add upstream and sync
+      - name: Add upstream and fetch
         run: |
-          git remote add upstream https://github.com/Vbaethon/HOMOMIX.git
+          git remote -v | grep upstream || git remote add upstream https://github.com/Vbaethon/HOMOMIX.git
           git fetch upstream
+
+      - name: Sync without workflows
+        run: |
           git checkout main
-          git checkout upstream/main -- .  # 拉取所有文件
-          git reset HEAD .github/workflows/  # 取消工作流文件的 staged 状态
+          git checkout upstream/main -- .
+          git reset HEAD .github/workflows/
           git restore --staged .github/workflows/
-          git commit -m "Sync without workflows"
-          git push origin main
-          git merge upstream/main --allow-unrelated-histories || echo "No changes to merge"
-          git push origin main
+
+          # 检查是否有变更再提交
+          if ! git diff --cached --quiet; then
+            git commit -m "Sync HOMOMIX updates without workflows"
+            git push origin main
+          else
+            echo "No changes to commit"
+          fi
