@@ -22,5 +22,5 @@ jobs:
           git remote add upstream https://github.com/Vbaethon/HOMOMIX.git
           git fetch upstream
           git checkout main
-          git merge upstream/main --allow-unrelated-histories
+          git merge upstream/main --allow-unrelated-histories || echo "No changes to merge"
           git push origin main
