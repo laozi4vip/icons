@@ -15,7 +15,7 @@
 
 3、Icons地址请使用raw地址
 
-        例如：https://raw.githubusercontent.com/Vbaethon/HOMOMIX/main/Icon/Color/China.png
+        例如：https://raw.githubusercontent.com/laozi/icons/main/Icon/Color/China.png
 
 #### 4、面板可以调节尺寸与距离
 
