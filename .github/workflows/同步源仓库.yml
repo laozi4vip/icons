@@ -8,6 +8,7 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -15,14 +16,14 @@ jobs:
       - name: Configure Git
         run: |
           git config --global user.name 'laozi'
-          #git config --global user.email 'your-email@example.com'
+         # git config --global user.email 'sync@github.local'  # 建议加上 email，避免某些 Git 操作警告
 
       - name: Add upstream and fetch
         run: |
-          git remote -v | grep upstream || git remote add upstream https://github.com/Vbaethon/HOMOMIX.git
+          git remote get-url upstream || git remote add upstream https://github.com/Vbaethon/HOMOMIX.git
           git fetch upstream
 
-      - name: Sync without workflows
+      - name: Sync HOMOMIX (excluding workflows)
         run: |
           git checkout main
           git checkout upstream/main -- .
@@ -31,8 +32,9 @@ jobs:
 
           # 检查是否有变更再提交
           if ! git diff --cached --quiet; then
-            git commit -m "Sync HOMOMIX updates without workflows"
+            echo "🔄 Changes detected, committing..."
+            git commit -m "Sync HOMOMIX updates (excluding workflows)"
             git push origin main
           else
-            echo "No changes to commit"
+            echo "✅ No changes to sync. Fork is already up to date."
           fi
